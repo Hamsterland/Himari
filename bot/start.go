@@ -3,15 +3,15 @@ package bot
 import (
 	"Himari/commands"
 	"fmt"
+	"github.com/Necroforger/dgrouter/exrouter"
+	"github.com/bwmarrin/discordgo"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 func Start() {
-	configuration := &configuration{}
+	configuration := &Configuration{}
 	configuration.parse()
 
 	bot, err := discordgo.New("Bot " + configuration.Token)
@@ -21,7 +21,9 @@ func Start() {
 		return
 	}
 
-	commands.RegisterRouter(bot)
+	router := exrouter.New()
+	commands.RegisterCommands(router)
+	commands.RegisterHandler(router, bot)
 
 	err = bot.Open()
 

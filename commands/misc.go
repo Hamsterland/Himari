@@ -1,15 +1,9 @@
 package commands
 
 import (
-	"github.com/Lukaesebrot/dgc"
+	"github.com/Necroforger/dgrouter/exrouter"
 )
 
-func pingCommand(ctx *dgc.Ctx) {
-	_ = ctx.RespondText("Pong!")
+func pingCommand(ctx *exrouter.Context) {
+	_, _ = ctx.Reply("Pong")
 }
-
-//func echoCommand(ctx *dgc.Ctx) {
-//	arguments := ctx.Arguments
-//	arguments.AsSingle()
-//	_ = ctx.RespondText(arguments.Raw())
-//}

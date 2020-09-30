@@ -6,20 +6,26 @@ import (
 	"os"
 )
 
-type configuration struct {
-	Token string `json:"token"`
+type Configuration struct {
+	Token  string `json:"Token"`
+	Prefix string `json:"Prefix"`
 }
 
-func (c *configuration) parse() error {
+func (c *Configuration) parse() error {
 
-	file, _ := os.Open("config.json")
+	file, err := os.Open("config.json")
+
+	if err != nil {
+		return errors.New("could not open config.json")
+	}
+
 	decoder := json.NewDecoder(file)
-	err := decoder.Decode(c)
+	err = decoder.Decode(c)
 
 	defer file.Close()
 
 	if err != nil {
-		return errors.New("could not decode configuration.json")
+		return errors.New("could not decode config.json")
 	}
 
 	return nil
