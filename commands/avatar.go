@@ -8,12 +8,13 @@ import (
 func avatarCommand(ctx *exrouter.Context) {
 
 	mentions := ctx.Msg.Mentions
+	args := ctx.Args
 
 	var name string
 	var url string
 
 	if len(mentions) == 0 {
-		if len(ctx.Args) == 2 {
+		if len(args) == 2 {
 			user, err := ctx.Ses.User(ctx.Args[1])
 			if err != nil || user == nil {
 				replyNotFound(ctx.Msg.Author, ctx.Msg.ChannelID, ctx.Ses)
@@ -21,7 +22,7 @@ func avatarCommand(ctx *exrouter.Context) {
 			}
 			name = user.Username + "'s Avatar"
 			url = user.AvatarURL("")
-		} else if len(ctx.Args) > 2 {
+		} else if len(args) > 2 {
 			replyMoreThanOne(ctx.Msg.Author, ctx.Msg.ChannelID, ctx.Ses)
 			return
 		} else {

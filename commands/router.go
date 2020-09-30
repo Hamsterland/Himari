@@ -13,15 +13,23 @@ func RegisterCommands(router *exrouter.Route) {
 		Handler:     pingCommand,
 	}
 
-	router.On(ping.Name, ping.Handler).Desc(ping.Description)
+	echo := Command{
+		Name:        "echo",
+		Description: "Echoes a message",
+		Handler:     echoCommand,
+	}
 
 	avatar := Command{
 		Name:        "avatar",
-		Description: "Retrieves your avatar",
+		Description: "Retrieves an avatar",
 		Handler:     avatarCommand,
 	}
 
-	router.On(avatar.Name, avatar.Handler).Desc(avatar.Description)
+	commands := []Command{ping, echo, avatar}
+
+	for _, command := range commands {
+		router.On(command.Name, command.Handler).Desc(command.Description)
+	}
 }
 
 func RegisterHandler(router *exrouter.Route, session *discordgo.Session) {
