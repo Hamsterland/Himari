@@ -1,60 +1,76 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/bwmarrin/discordgo"
+	"strings"
 )
 
 func avatarCommand(ctx *exrouter.Context) {
-
 	mentions := ctx.Msg.Mentions
-	args := ctx.Args
+	args := Truncate(ctx.Args)
 
-	var name string
-	var url string
+	// Map to hold found users and their avatars.
+	// Maximum capacity of 8 for practical purposes.
+	users := make(map[*discordgo.User]string)
+	const title string = "%s's Avatar"
 
-	if len(mentions) == 0 {
-		if len(args) == 2 {
-			user, err := ctx.Ses.User(ctx.Args[1])
-			if err != nil || user == nil {
-				replyNotFound(ctx.Msg.Author, ctx.Msg.ChannelID, ctx.Ses)
-				return
-			}
-			name = user.Username + "'s Avatar"
-			url = user.AvatarURL("")
-		} else if len(args) > 2 {
-			replyMoreThanOne(ctx.Msg.Author, ctx.Msg.ChannelID, ctx.Ses)
-			return
-		} else {
-			name = ctx.Msg.Author.Username + "'s Avatar"
-			url = ctx.Msg.Author.AvatarURL("")
-		}
-	} else if len(mentions) == 1 {
-		name = mentions[0].Username + "'s Avatar"
-		url = mentions[0].AvatarURL("")
-	} else {
-		replyMoreThanOne(ctx.Msg.Author, ctx.Msg.ChannelID, ctx.Ses)
+	// If there are more than 8 provided arguments.
+	if len(args) > 8 {
+		_, _ = ctx.Reply(fmt.Sprintf("%s I cannot find the avatars for more than eight users!", ctx.Msg.Author))
 		return
 	}
 
-	embed := &discordgo.MessageEmbed{
-		Author: &discordgo.MessageEmbedAuthor{
-			Name:    name,
-			IconURL: url,
-		},
-		Image: &discordgo.MessageEmbedImage{
-			URL: url,
-		},
-		Description: url,
+	// If there are no provided arguments.
+	if len(args) == 0 {
+		users[ctx.Msg.Author] = ctx.Msg.Author.AvatarURL("")
 	}
 
-	_, _ = ctx.Ses.ChannelMessageSendEmbed(ctx.Msg.ChannelID, embed)
-}
+	// If there are multiple provided arguments.
+	if len(args) > 0 {
 
-func replyNotFound(user *discordgo.User, chnId string, ses *discordgo.Session) {
-	_, _ = ses.ChannelMessageSend(chnId, user.Mention()+" I cannot find the user you queried.")
-}
+		// If there any mentions, add them to the map.
+		if len(mentions) > 0 {
+			for _, mention := range mentions {
+				users[mention] = mention.AvatarURL("")
+			}
+		}
 
-func replyMoreThanOne(user *discordgo.User, chnId string, ses *discordgo.Session) {
-	_, _ = ses.ChannelMessageSend(chnId, user.Mention()+" I cannot find the Avatar for more than one user!")
+		// Otherwise, let's try parse the remaining arguments as users.
+		for _, arg := range args {
+			lookup, err := ctx.Ses.User(arg)
+			if err != nil {
+				continue
+			}
+			users[lookup] = lookup.AvatarURL("")
+		}
+	}
+
+	// Finally, build the embeds.
+	embed := NewEmbed()
+
+	// If there is only one found user, make a single embed with an image.
+	if len(users) == 1 {
+		for user, url := range users {
+			embed.SetTitle(fmt.Sprintf(title, user)).
+				SetDescription(url).
+				SetImage(url)
+		}
+	}
+
+	// If there are multiple found users, put all of them into the embed without images.
+	if len(users) > 1 {
+		builder := strings.Builder{}
+		for user, url := range users {
+			builder.WriteString("\n\n")
+			builder.WriteString(user.Mention() + " " + url)
+		}
+
+		embed.SetTitle("I found the following avatars...").
+			SetDescription(builder.String()).
+			SetColor(EmbedColour)
+	}
+
+	_, _ = ctx.Ses.ChannelMessageSendEmbed(ctx.Msg.ChannelID, embed.MessageEmbed)
 }
