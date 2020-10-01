@@ -1,20 +1,14 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"strings"
 )
 
 func echoCommand(ctx *exrouter.Context) {
-	var sb strings.Builder
-	var args []string = ctx.Args
-	for _, arg := range args {
-		if arg == ctx.Route.Name {
-			continue
-		} else {
-			sb.WriteString(" " + arg)
-		}
-	}
-	echo := sb.String()
-	_, _ = ctx.Reply(echo)
+	args := Truncate(ctx.Args)
+	echo := strings.Join(args, " ")
+	final := fmt.Sprintf("**%s:** %s", ctx.Msg.Author, echo)
+	_, _ = ctx.Reply(final)
 }
