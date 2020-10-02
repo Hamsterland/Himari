@@ -42,7 +42,7 @@ func Start() {
 	_ = session.Close()
 }
 
-func imagesOnly(s *discordgo.Session, m *discordgo.Message) {
+func imagesOnly(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Check if the message came from the Nino channel.
 	if m.ChannelID != "760935127303192616" {
