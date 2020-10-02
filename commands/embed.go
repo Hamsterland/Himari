@@ -14,7 +14,7 @@ const (
 	EmbedLimitFieldName   = 256
 	EmbedLimitField       = 25
 	EmbedLimitFooter      = 2048
-	EmbedColour           = 16557773
+	EmbedColour           = 8281303
 )
 
 //NewEmbed returns a new embed object
