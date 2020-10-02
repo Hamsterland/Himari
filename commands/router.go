@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"Himari/config"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/bwmarrin/discordgo"
 )
@@ -24,6 +25,6 @@ func enableCommands(router *exrouter.Route) {
 
 func registerHandler(router *exrouter.Route, session *discordgo.Session) {
 	session.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		_ = router.FindAndExecute(s, "!", s.State.User.ID, m.Message)
+		_ = router.FindAndExecute(s, config.Prefix, s.State.User.ID, m.Message)
 	})
 }

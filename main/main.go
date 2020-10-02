@@ -1,7 +1,8 @@
-package bot
+package main
 
 import (
 	"Himari/commands"
+	"Himari/config"
 	"fmt"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/bwmarrin/discordgo"
@@ -11,20 +12,24 @@ import (
 	"syscall"
 )
 
-func Start() {
-	configuration := &Configuration{}
-	configuration.parse()
+func main() {
 
-	session, err := discordgo.New("Bot " + configuration.Token)
+	// Create the application configuration.
+	config.Create()
+
+	// Start a new session.
+	session, err := discordgo.New("Bot " + config.Token)
 
 	if err != nil {
 		fmt.Println("error creating session", err)
 		return
 	}
 
+	// Initialize the command router.
 	router := exrouter.New()
 	commands.Initialize(router, session)
 
+	// Open the session.
 	err = session.Open()
 
 	if err != nil {
@@ -32,13 +37,16 @@ func Start() {
 		return
 	}
 
+	// Temporary MessageCreate handler.
 	session.AddHandler(imagesOnly)
 
+	// Wait for Ctrl + C to close.
 	fmt.Println("Bot is now running. Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
+	// Close
 	_ = session.Close()
 }
 

@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-var _ = New("avatar", "Finds user's avatars", avatarCommand)
-
 func avatarCommand(ctx *exrouter.Context) {
 	mentions := ctx.Msg.Mentions
 	args := Truncate(ctx.Args)
@@ -50,12 +48,11 @@ func avatarCommand(ctx *exrouter.Context) {
 
 	// Finally, build the embeds.
 	embed := NewEmbed()
-	const title string = "%s's Avatar"
 
 	// If there is only one found user, make a single embed with an image.
 	if len(users) == 1 {
 		for user, url := range users {
-			embed.SetTitle(fmt.Sprintf(title, user)).
+			embed.SetTitle(fmt.Sprintf("%s's Avatar", user)).
 				SetDescription(url).
 				SetImage(url)
 		}
@@ -69,9 +66,14 @@ func avatarCommand(ctx *exrouter.Context) {
 			builder.WriteString(user.Mention() + " " + url)
 		}
 
-		embed.SetTitle("I found the following avatars...").SetDescription(builder.String())
+		title := fmt.Sprintf("%s I found these avatars!", ctx.Msg.Author)
+		embed.SetTitle(title).SetDescription(builder.String())
 	}
 
 	// Send the embed to the channel.
 	_, _ = ctx.Ses.ChannelMessageSendEmbed(ctx.Msg.ChannelID, embed.MessageEmbed)
+}
+
+func init() {
+	New("avatar", "Finds user's avatars", avatarCommand)
 }
