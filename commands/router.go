@@ -5,34 +5,24 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func RegisterCommands(router *exrouter.Route) {
+var Commands []*Command
 
-	ping := Command{
-		Name:        "ping",
-		Description: "Responds with \"Pong\"",
-		Handler:     pingCommand,
-	}
+func Initialize(router *exrouter.Route, session *discordgo.Session) {
+	enableCommands(router)
+	registerHandler(router, session)
+}
 
-	echo := Command{
-		Name:        "echo",
-		Description: "Echoes a message",
-		Handler:     echoCommand,
-	}
+func add(command *Command) {
+	Commands = append(Commands, command)
+}
 
-	avatar := Command{
-		Name:        "avatar",
-		Description: "Retrieves an avatar",
-		Handler:     avatarCommand,
-	}
-
-	commands := []Command{ping, echo, avatar}
-
-	for _, command := range commands {
+func enableCommands(router *exrouter.Route) {
+	for _, command := range Commands {
 		router.On(command.Name, command.Handler).Desc(command.Description)
 	}
 }
 
-func RegisterHandler(router *exrouter.Route, session *discordgo.Session) {
+func registerHandler(router *exrouter.Route, session *discordgo.Session) {
 	session.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		_ = router.FindAndExecute(s, "!", s.State.User.ID, m.Message)
 	})

@@ -14,13 +14,12 @@ const (
 	EmbedLimitFieldName   = 256
 	EmbedLimitField       = 25
 	EmbedLimitFooter      = 2048
-	EmbedLimit            = 4000
 	EmbedColour           = 16557773
 )
 
 //NewEmbed returns a new embed object
 func NewEmbed() *Embed {
-	return &Embed{&discordgo.MessageEmbed{}}
+	return &Embed{&discordgo.MessageEmbed{Color: EmbedColour}}
 }
 
 // SetTitle ...
@@ -93,16 +92,20 @@ func (e *Embed) SetImage(args ...string) *Embed {
 	if len(args) == 0 {
 		return e
 	}
+
 	if len(args) > 0 {
 		URL = args[0]
 	}
+
 	if len(args) > 1 {
 		proxyURL = args[1]
 	}
+
 	e.Image = &discordgo.MessageEmbedImage{
 		URL:      URL,
 		ProxyURL: proxyURL,
 	}
+
 	return e
 }
 
@@ -114,16 +117,20 @@ func (e *Embed) SetThumbnail(args ...string) *Embed {
 	if len(args) == 0 {
 		return e
 	}
+
 	if len(args) > 0 {
 		URL = args[0]
 	}
+
 	if len(args) > 1 {
 		proxyURL = args[1]
 	}
+
 	e.Thumbnail = &discordgo.MessageEmbedThumbnail{
 		URL:      URL,
 		ProxyURL: proxyURL,
 	}
+
 	return e
 }
 
@@ -139,15 +146,18 @@ func (e *Embed) SetAuthor(args ...string) *Embed {
 	if len(args) == 0 {
 		return e
 	}
+
 	if len(args) > 0 {
 		name = args[0]
 	}
 	if len(args) > 1 {
 		iconURL = args[1]
 	}
+
 	if len(args) > 2 {
 		URL = args[2]
 	}
+
 	if len(args) > 3 {
 		proxyURL = args[3]
 	}

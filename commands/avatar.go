@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var _ = New("avatar", "Finds user's avatars", avatarCommand)
+
 func avatarCommand(ctx *exrouter.Context) {
 	mentions := ctx.Msg.Mentions
 	args := Truncate(ctx.Args)
@@ -14,11 +16,10 @@ func avatarCommand(ctx *exrouter.Context) {
 	// Map to hold found users and their avatars.
 	// Maximum capacity of 8 for practical purposes.
 	users := make(map[*discordgo.User]string)
-	const title string = "%s's Avatar"
 
 	// If there are more than 8 provided arguments.
 	if len(args) > 8 {
-		_, _ = ctx.Reply(fmt.Sprintf("%s I cannot find the avatars for more than eight users!", ctx.Msg.Author))
+		_, _ = ctx.Reply(fmt.Sprintf("%s I cannot find the avatars for more than eight users!", ctx.Msg.Author.Mention()))
 		return
 	}
 
@@ -49,6 +50,7 @@ func avatarCommand(ctx *exrouter.Context) {
 
 	// Finally, build the embeds.
 	embed := NewEmbed()
+	const title string = "%s's Avatar"
 
 	// If there is only one found user, make a single embed with an image.
 	if len(users) == 1 {
@@ -67,10 +69,9 @@ func avatarCommand(ctx *exrouter.Context) {
 			builder.WriteString(user.Mention() + " " + url)
 		}
 
-		embed.SetTitle("I found the following avatars...").
-			SetDescription(builder.String()).
-			SetColor(EmbedColour)
+		embed.SetTitle("I found the following avatars...").SetDescription(builder.String())
 	}
 
+	// Send the embed to the channel.
 	_, _ = ctx.Ses.ChannelMessageSendEmbed(ctx.Msg.ChannelID, embed.MessageEmbed)
 }

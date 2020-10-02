@@ -14,7 +14,7 @@ func Start() {
 	configuration := &Configuration{}
 	configuration.parse()
 
-	bot, err := discordgo.New("Bot " + configuration.Token)
+	session, err := discordgo.New("Bot " + configuration.Token)
 
 	if err != nil {
 		fmt.Println("error creating session", err)
@@ -22,13 +22,12 @@ func Start() {
 	}
 
 	router := exrouter.New()
-	commands.RegisterCommands(router)
-	commands.RegisterHandler(router, bot)
+	commands.Initialize(router, session)
 
-	err = bot.Open()
+	err = session.Open()
 
 	if err != nil {
-		fmt.Println("error starting bot", err)
+		fmt.Println("error starting session", err)
 		return
 	}
 
@@ -37,5 +36,5 @@ func Start() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	_ = bot.Close()
+	_ = session.Close()
 }
