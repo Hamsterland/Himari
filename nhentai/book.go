@@ -19,7 +19,7 @@ type Book struct {
 	Images         Images `json:"images"`
 	Scanlator      string `json:"scanlator"`
 	UnixUploadDate int64  `json:"upload_date"`
-	Tags           Tag    `json:"tags"`
+	Tags           []Tag  `json:"tags"`
 	TotalPages     int32  `json:"num_pages"`
 	TotalFavorites int32  `json:"num_favorites"`
 }

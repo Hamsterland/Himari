@@ -38,7 +38,7 @@ func (e *Embed) SetDescription(description string) *Embed {
 }
 
 // AddField [name] [value]
-func (e *Embed) AddField(name, value string) *Embed {
+func (e *Embed) AddField(name, value string, inline bool) *Embed {
 	if len(value) > 1024 {
 		value = value[:1024]
 	}
@@ -48,8 +48,9 @@ func (e *Embed) AddField(name, value string) *Embed {
 	}
 
 	e.Fields = append(e.Fields, &discordgo.MessageEmbedField{
-		Name:  name,
-		Value: value,
+		Name:   name,
+		Value:  value,
+		Inline: inline,
 	})
 
 	return e
