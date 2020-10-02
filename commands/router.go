@@ -8,12 +8,12 @@ import (
 
 var Commands []*Command
 
-func Initialize(router *exrouter.Route, session *discordgo.Session) {
+func NewRouter(router *exrouter.Route, session *discordgo.Session) {
 	enableCommands(router)
 	registerHandler(router, session)
 }
 
-func add(command *Command) {
+func addCommand(command *Command) {
 	Commands = append(Commands, command)
 }
 

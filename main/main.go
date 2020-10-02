@@ -27,7 +27,7 @@ func main() {
 
 	// Initialize the command router.
 	router := exrouter.New()
-	commands.Initialize(router, session)
+	commands.NewRouter(router, session)
 
 	// Open the session.
 	err = session.Open()

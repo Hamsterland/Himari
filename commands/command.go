@@ -8,12 +8,12 @@ type Command struct {
 	Handler     exrouter.HandlerFunc
 }
 
-func New(name string, description string, handler exrouter.HandlerFunc) *Command {
+func NewCommand(name string, description string, handler exrouter.HandlerFunc) *Command {
 	command := &Command{
 		Name:        name,
 		Description: description,
 		Handler:     handler,
 	}
-	add(command)
+	addCommand(command)
 	return command
 }

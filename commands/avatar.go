@@ -75,5 +75,5 @@ func avatarCommand(ctx *exrouter.Context) {
 }
 
 func init() {
-	New("avatar", "Finds user's avatars", avatarCommand)
+	NewCommand("avatar", "Finds user's avatars", avatarCommand)
 }
