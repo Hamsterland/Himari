@@ -49,6 +49,11 @@ func imagesOnly(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	// If it isn't a webhook, it's cool.
+	if m.WebhookID != "" {
+		return
+	}
+
 	// Check if the message has an image url. If so, it's fine.
 	match, _ := regexp.MatchString("(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)", m.Content)
 	if match {
