@@ -49,7 +49,7 @@ func imagesOnly(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	// If it isn't a webhook, it's cool.
+	// If it is a webhook, it's cool.
 	if m.WebhookID != "" {
 		return
 	}
