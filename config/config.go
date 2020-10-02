@@ -27,7 +27,7 @@ func get() *configuration {
 	c := &configuration{}
 
 	// Open the file.
-	file, _ := os.Open("config.json")
+	file, _ := os.Open("./config.json")
 
 	// Declare a decoder and deserialize.
 	decoder := json.NewDecoder(file)
