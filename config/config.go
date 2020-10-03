@@ -10,7 +10,7 @@ var (
 	Prefix string
 )
 
-func Create() {
+func InitializeConfig() {
 	c := get()
 	Token = c.Token
 	Prefix = c.Prefix

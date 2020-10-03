@@ -15,7 +15,7 @@ import (
 func main() {
 
 	// Create the application configuration.
-	config.Create()
+	config.InitializeConfig()
 
 	// Start a new session.
 	session, err := discordgo.New("Bot " + config.Token)

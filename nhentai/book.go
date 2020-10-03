@@ -13,15 +13,15 @@ type Search struct {
 }
 
 type Book struct {
-	Id             int32  `json:"id"`
+	ID             int    `json:"id"`
 	MediaId        string `json:"media_id"`
 	Titles         Titles `json:"title"`
 	Images         Images `json:"images"`
 	Scanlator      string `json:"scanlator"`
 	UnixUploadDate int64  `json:"upload_date"`
 	Tags           []Tag  `json:"tags"`
-	TotalPages     int32  `json:"num_pages"`
-	TotalFavorites int32  `json:"num_favorites"`
+	TotalPages     int    `json:"num_pages"`
+	TotalFavorites int    `json:"num_favorites"`
 }
 
 func (book *Book) GetAllUrls() ([]string, error) {
